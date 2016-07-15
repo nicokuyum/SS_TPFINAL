@@ -9,7 +9,7 @@ public class World {
 
 	private Particle[][] matrix = null;
 	private static final double GRAVITY = 9.8;
-
+	private static final double C = 0.7;
 	public int h, w;
 
 	private World() {
@@ -94,7 +94,10 @@ public class World {
 	}
 	
 	private Vector3D getExternalForces(Particle p){
-		Vector3D f = new Vector(0,0,GRAVITY*p.get);
+		Vector3D vel = p.getVel();
+		vel.multiply(C);
+		Vector3D f = new Vector3D(0,0,GRAVITY*p.getMass());
+		f.minus(vel);
 		return f;
 		
 	}
@@ -109,6 +112,10 @@ public class World {
 	
 	private Vector3D substractVector(Vector3D v1, Vector3D v2){
 		return new Vector3D(v1.getX()-v2.getX(),v1.getY()-v2.getY(),v1.getZ()-v2.getZ());
+	}
+	
+	private Vector3D multiplyVector(Vector3D v1, double value){
+		return new Vector3D(v1.getX()*value, v1.getY()*value, v1.getZ()*value);
 	}
 
 }

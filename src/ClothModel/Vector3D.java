@@ -50,6 +50,18 @@ public class Vector3D {
 		this.z = z;
 	}
 
+	public void sum(Vector3D v2){
+		this.x+=v2.getX();
+		this.y+=v2.getY();
+		this.z+=v2.getZ();
+	}
+
+	public void minus(Vector3D v2){
+		this.x-=v2.getX();
+		this.y-=v2.getY();
+		this.z-=v2.getZ();
+	}
+	
 	public String toString(){
 		return "[" + x + " - " + y + " - " + z + "]";
 	}
