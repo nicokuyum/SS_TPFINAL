@@ -1,9 +1,12 @@
 package ClothModel;
 
 public class World {
+	
+	public final double INIT_HEIGHT = 0;
+	public final boolean diagonal = true;
 
 	private static World instance = null;
-	private Particle[][] matrix = null;
+	public Particle[][] matrix = null;
 	public int h, w;
 
 	private World() {
@@ -21,14 +24,14 @@ public class World {
 			this.h = h;
 			this.w = w;
 		}
-		generateParticle(matrix, h, w, mass);
+		generateParticles(matrix, h, w, mass);
 		calculateNeighbours(matrix);
 	}
 
-	private void generateParticle(Particle[][] matrix, int height, int width, int mass) {
+	private void generateParticles(Particle[][] matrix, int height, int width, int mass) {
 		for (int i = 0; i < height; i++) {
 			for (int j = 0; j < width; j++) {
-				matrix[i][j] = new Particle(i, j, mass);
+				matrix[i][j] = new Particle(i*width+j,i, j, INIT_HEIGHT, mass);
 			}
 		}
 	}
@@ -36,8 +39,32 @@ public class World {
 	private void calculateNeighbours(Particle[][] matrix) {
 		for (int i = 0; i < h; i++) {
 			for (int j = 0; j < w; j++) {
-				matrix[i][j].setNeighbours(i, j, h, w, matrix);
+				setNeighbours(i, j);
 			}
+		}
+	}
+	
+	private void setNeighbours(int i, int j){
+		int neighX, neighY;
+		for(int x=0; x<=1; x++){
+			neighX = i+x;
+			if(neighX>=0 && neighX<h){
+				for(int y=0; y<=1; y++){
+					neighY = j+y;
+					// Add particles: right, bottom and bottom right
+					if(neighY>=0 && neighY<w && (x!=0 || y!=0)){
+						if(!(!diagonal && x==1 && y==1)){
+							matrix[i][j].setNeighbour(matrix[neighX][neighY]);
+							matrix[neighX][neighY].setNeighbour(matrix[i][j]);
+						}
+					}
+				}
+			}
+		}
+		// Add particle: top right
+		if(diagonal && i-1>=0 && j+1<w){
+			matrix[i][j].setNeighbour(matrix[i-1][j+1]);
+			matrix[i-1][j+1].setNeighbour(matrix[i][j]);
 		}
 	}
 	

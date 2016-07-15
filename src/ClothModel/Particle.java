@@ -3,38 +3,52 @@ package ClothModel;
 import java.util.*;
 
 public class Particle {
+	
+	private final int ID;
+	Vector3D pos;
+	double mass;
+	private Set<Particle> neighbours;
 
-	Vector pos;
-	int mass;
-	List<Particle> neighbours;
-
-	public Particle(int x, int y, int mass) {
-		pos = new Vector(x, y);
+	public Particle(int id, double x, double y, double z, double mass) {
+		this.ID = id;
+		pos = new Vector3D(x, y, z);
 		this.mass = mass;
-		neighbours = new ArrayList<>();
+		neighbours = new HashSet<>();
 	}
 
-	public void setNeighbours(int posi, int posj, int h, int w, Particle[][] matrix) {
-		List<Vector> posNeighbours = new ArrayList<>();
-		posNeighbours.add(new Vector(1, 0));
-		posNeighbours.add(new Vector(1, 1));
-		posNeighbours.add(new Vector(1, -1));
-		posNeighbours.add(new Vector(0, -1));
-		posNeighbours.add(new Vector(0, 1));
-		posNeighbours.add(new Vector(-1, 1));
-		posNeighbours.add(new Vector(-1, 0));
-		posNeighbours.add(new Vector(-1, -1));
-		
-		for(Vector v : posNeighbours){
-			if(!(posi + v.getX() < 0 || posi + v.getX() > h)){
-				if(!(posj + v.getY() < 0 || posj + v.getY() > w)){
-					neighbours.add(matrix[posi+v.getX()][posj + v.getY()]);
-				}
-			}
+	public void setNeighbour(Particle p) {
+		neighbours.add(p);
+	}
+	
+
+	// FOR TESTING
+	public void printNeighbours(){
+		for(Particle n: neighbours){
+			System.out.println(n.ID);
 		}
-
 	}
 	
+	public Set<Particle> getNeighbours() {
+		return neighbours;
+	}
 	
-
+	public Vector3D getPos() {
+		return pos;
+	}
+	
+	public int hashCode(){
+		return ID;
+	}
+	
+	public boolean equals(Object other){
+		if(other == null)
+			return false;
+		if(other.getClass() != this.getClass())
+			return false;
+		Particle o = (Particle)other;
+		if(this.ID != o.ID){
+			return false;
+		}
+		return true;
+	}
 }
