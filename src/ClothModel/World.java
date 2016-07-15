@@ -6,16 +6,10 @@ public class World {
 	public boolean diagonal = true;
 
 	private static World instance = null;
-<<<<<<< HEAD
-	private Particle[][] matrix = null;
-	private int h, w;
-=======
-
 	private Particle[][] matrix = null;
 	private static final double GRAVITY = 9.8;
 
 	public int h, w;
->>>>>>> 4186c81b3628afccf4bb1483e5ba674d95c9815e
 
 	private World() {
 	}
@@ -90,7 +84,7 @@ public class World {
 		for(Particle neighbour: p.getNeighbours()){
 			Vector3D aux= substractVector(neighbour.getPos(),p.getPos());
 			
-			f.sum(substractVector(aux,(substractVector(neighbour.getPos(),p.getPos())).multiply(original/p.getDistance(neighbour)) );
+			f.sum(substractVector(aux,(substractVector(neighbour.getPos(),p.getPos())).multiply(original/p.getDistance(neighbour))));
 		}
 		
 		
@@ -99,7 +93,7 @@ public class World {
 	}
 	
 	private Vector3D getExternalForces(Particle p){
-		Vector3D f = new Vector(0,0,GRAVITY*p.get);
+		Vector3D f = new Vector3D(0,0,GRAVITY*p.getMass());
 		return f;
 		
 	}

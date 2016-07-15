@@ -5,8 +5,8 @@ import java.util.*;
 public class Particle {
 	
 	private final int ID;
-	Vector3D pos;
-	double mass;
+	private Vector3D pos;
+	private double mass;
 	private Set<Particle> neighbours;
 
 
@@ -21,18 +21,6 @@ public class Particle {
 		neighbours.add(p);
 	}
 	
-<<<<<<< HEAD
-=======
-
-
-	// FOR TESTING
-	public void printNeighbours(){
-		for(Particle n: neighbours){
-			System.out.println(n.ID);
-		}
-	}
-	
->>>>>>> 4186c81b3628afccf4bb1483e5ba674d95c9815e
 	public Set<Particle> getNeighbours() {
 		return neighbours;
 	}
@@ -45,6 +33,13 @@ public class Particle {
 		return pos;
 	}
 
+	public double getMass() {
+		return mass;
+	}
+	
+	public double getDistance(Particle p){
+		return pos.getDistance(p.getPos());
+	}
 	
 	public int hashCode(){
 		return ID;

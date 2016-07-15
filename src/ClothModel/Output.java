@@ -31,7 +31,7 @@ public class Output {
 			for (int i = 0; i < h; i++) {
 				for (int j = 0; j < w; j++) {
 					Particle p = matrix[i][j];
-					out.write(p.getID() + "\t" + p.pos.getX() + "\t" + p.pos.getY() + "\t" + p.pos.getZ() + "\t" + 0.1 + "\t"
+					out.write(p.getID() + "\t" + p.getPos().getX() + "\t" + p.getPos().getY() + "\t" + p.getPos().getZ() + "\t" + 0.1 + "\t"
 							+ 255 + "\t" + 255 + "\t" + 255 + "\n");
 				}
 			}
