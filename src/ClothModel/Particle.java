@@ -9,6 +9,7 @@ public class Particle {
 	double mass;
 	private Set<Particle> neighbours;
 
+
 	public Particle(int id, double x, double y, double z, double mass) {
 		this.ID = id;
 		pos = new Vector3D(x, y, z);
@@ -20,6 +21,18 @@ public class Particle {
 		neighbours.add(p);
 	}
 	
+<<<<<<< HEAD
+=======
+
+
+	// FOR TESTING
+	public void printNeighbours(){
+		for(Particle n: neighbours){
+			System.out.println(n.ID);
+		}
+	}
+	
+>>>>>>> 4186c81b3628afccf4bb1483e5ba674d95c9815e
 	public Set<Particle> getNeighbours() {
 		return neighbours;
 	}
@@ -31,6 +44,7 @@ public class Particle {
 	public Vector3D getPos() {
 		return pos;
 	}
+
 	
 	public int hashCode(){
 		return ID;

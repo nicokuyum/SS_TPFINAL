@@ -6,8 +6,16 @@ public class World {
 	public boolean diagonal = true;
 
 	private static World instance = null;
+<<<<<<< HEAD
 	private Particle[][] matrix = null;
 	private int h, w;
+=======
+
+	private Particle[][] matrix = null;
+	private static final double GRAVITY = 9.8;
+
+	public int h, w;
+>>>>>>> 4186c81b3628afccf4bb1483e5ba674d95c9815e
 
 	private World() {
 	}
@@ -68,8 +76,44 @@ public class World {
 		}
 	}
 	
+	public Vector3D Force(Particle p){
+		Vector3D f = new Vector3D(0,0,-p.getMass()*GRAVITY);
+		return addVector(getInternalForces(p),getExternalForces(p));		
+		
+	}
+	
+	private Vector3D getInternalForces(Particle p){
+		Vector3D f=new Vector3D(0,0,0);
+		double k =0.3;
+		double original = 1;
+		
+		for(Particle neighbour: p.getNeighbours()){
+			Vector3D aux= substractVector(neighbour.getPos(),p.getPos());
+			
+			f.sum(substractVector(aux,(substractVector(neighbour.getPos(),p.getPos())).multiply(original/p.getDistance(neighbour)) );
+		}
+		
+		
+		return f;
+		
+	}
+	
+	private Vector3D getExternalForces(Particle p){
+		Vector3D f = new Vector(0,0,GRAVITY*p.get);
+		return f;
+		
+	}
+	
 	public Particle[][] getMatrix() {
 		return matrix;
+	}
+	
+	private Vector3D addVector(Vector3D v1, Vector3D v2){
+		return new Vector3D(v1.getX()+v2.getX(),v1.getY()+v2.getY(),v1.getZ()+v2.getZ());
+	}
+	
+	private Vector3D substractVector(Vector3D v1, Vector3D v2){
+		return new Vector3D(v1.getX()-v2.getX(),v1.getY()-v2.getY(),v1.getZ()-v2.getZ());
 	}
 
 }
