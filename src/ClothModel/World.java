@@ -3,11 +3,11 @@ package ClothModel;
 public class World {
 	
 	public final double INIT_HEIGHT = 0;
-	public final boolean diagonal = true;
+	public boolean diagonal = true;
 
 	private static World instance = null;
-	public Particle[][] matrix = null;
-	public int h, w;
+	private Particle[][] matrix = null;
+	private int h, w;
 
 	private World() {
 	}

@@ -20,16 +20,12 @@ public class Particle {
 		neighbours.add(p);
 	}
 	
-
-	// FOR TESTING
-	public void printNeighbours(){
-		for(Particle n: neighbours){
-			System.out.println(n.ID);
-		}
-	}
-	
 	public Set<Particle> getNeighbours() {
 		return neighbours;
+	}
+	
+	public int getID() {
+		return ID;
 	}
 	
 	public Vector3D getPos() {
