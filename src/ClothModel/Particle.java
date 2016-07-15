@@ -7,6 +7,7 @@ public class Particle {
 	private final int ID;
 	private Vector3D pos;
 	private Vector3D vel;
+
 	private double mass;
 	private Set<Particle> neighbours;
 
@@ -23,29 +24,32 @@ public class Particle {
 		neighbours.add(p);
 	}
 	
-
-
-	// FOR TESTING
-	public void printNeighbours(){
-		for(Particle n: neighbours){
-			System.out.println(n.ID);
-		}
-	}
-	
 	public Set<Particle> getNeighbours() {
 		return neighbours;
+	}
+	
+	public int getID() {
+		return ID;
 	}
 	
 	public Vector3D getPos() {
 		return pos;
 	}
+
 	
 	public Vector3D getVel(){
 		return vel;
 	}
 	
-	public double getMass(){
+	
+
+	public double getMass() {
 		return mass;
+	}
+	
+	public double getDistance(Particle p){
+		return pos.getDistance(p.getPos());
+
 	}
 	
 	public int hashCode(){

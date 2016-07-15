@@ -3,10 +3,9 @@ package ClothModel;
 public class World {
 	
 	public final double INIT_HEIGHT = 0;
-	public final boolean diagonal = true;
+	public boolean diagonal = true;
 
 	private static World instance = null;
-
 	private Particle[][] matrix = null;
 	private static final double GRAVITY = 9.8;
 	private static final double C = 0.7;
@@ -85,7 +84,7 @@ public class World {
 		for(Particle neighbour: p.getNeighbours()){
 			Vector3D aux= substractVector(neighbour.getPos(),p.getPos());
 			
-			f.sum(substractVector(aux,(substractVector(neighbour.getPos(),p.getPos())).multiply(original/p.getDistance(neighbour)) );
+			f.sum(substractVector(aux,multiplyVector((substractVector(neighbour.getPos(),p.getPos())),original/p.getDistance(neighbour))));
 		}
 		
 		
@@ -94,10 +93,12 @@ public class World {
 	}
 	
 	private Vector3D getExternalForces(Particle p){
+
 		Vector3D vel = p.getVel();
 		vel.multiply(C);
 		Vector3D f = new Vector3D(0,0,GRAVITY*p.getMass());
 		f.minus(vel);
+
 		return f;
 		
 	}
