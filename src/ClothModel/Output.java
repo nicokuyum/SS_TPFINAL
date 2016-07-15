@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Set;
 
 public class Output {
 	private static Output instance = null;
@@ -14,7 +15,7 @@ public class Output {
 		return instance;
 	}
 
-	public void write(Particle[][] matrix, int h, int w, double time, int runNum) {
+	public void write(Set<Particle> particles,double time, int runNum) {
 		String fileName = "output" + runNum + ".xyz";
 		if (time == 0) {
 			try {
@@ -25,15 +26,24 @@ public class Output {
 			}
 		}
 		try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(fileName, true)))) {
-			out.write("" + (h*w) + "\n");
-			out.write("Comment line\n");
-			// radio de la particula?
-			for (int i = 0; i < h; i++) {
-				for (int j = 0; j < w; j++) {
-					Particle p = matrix[i][j];
-					out.write(p.getID() + "\t" + p.getPos().getX() + "\t" + p.getPos().getY() + "\t" + p.getPos().getZ() + "\t" + 0.1 + "\t"
+			out.write("" + (particles.size()+8) + "\n");
+			
+			// Comment line
+			out.write("Tiempo: " + time + "\n");
+			
+			// Boundary Particles for Ovito
+			out.write("25000\t0\t0\t0\t0.1\t0\t0\t0\n");
+			out.write("25000\t20\t0\t0\t0.1\t0\t0\t0\n");
+			out.write("25000\t0\t20\t0\t0.1\t0\t0\t0\n");
+			out.write("25000\t0\t0\t20\t0.1\t0\t0\t0\n");
+			out.write("25000\t20\t20\t0\t0.1\t0\t0\t0\n");
+			out.write("25000\t20\t0\t20\t0.1\t0\t0\t0\n");
+			out.write("25000\t0\t20\t20\t0.1\t0\t0\t0\n");
+			out.write("25000\t20\t20\t20\t0.1\t0\t0\t0\n");
+			
+			for(Particle p: particles){
+					out.write(p.getID() + "\t" + p.getPos().getX() + "\t" + p.getPos().getY() + "\t" + p.getPos().getZ() + "\t" + 0.2 + "\t"
 							+ 255 + "\t" + 255 + "\t" + 255 + "\n");
-				}
 			}
 			out.close();
 		} catch (IOException e) {

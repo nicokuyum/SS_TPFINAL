@@ -1,17 +1,23 @@
 package ClothModel;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class World {
 	
-	public final double INIT_HEIGHT = 0;
+	public final double INIT_HEIGHT = 20;
 	public boolean diagonal = true;
 
 	private static World instance = null;
 	private Particle[][] matrix = null;
+	private Set<Particle> particles;
+	
 	private static final double GRAVITY = 9.8;
 	private static final double C = 0.7;
 	public int h, w;
 
 	private World() {
+		 particles = new HashSet<Particle>();
 	}
 
 	public static World getInstance() {
@@ -21,11 +27,10 @@ public class World {
 	}
 
 	public void setWorld(int h, int w, int mass) {
-		if (matrix == null) {
-			matrix = new Particle[h][w];
-			this.h = h;
-			this.w = w;
-		}
+		particles.clear();
+		matrix = new Particle[h][w];
+		this.h = h;
+		this.w = w;
 		generateParticles(matrix, h, w, mass);
 		calculateNeighbours(matrix);
 	}
@@ -33,7 +38,9 @@ public class World {
 	private void generateParticles(Particle[][] matrix, int height, int width, int mass) {
 		for (int i = 0; i < height; i++) {
 			for (int j = 0; j < width; j++) {
-				matrix[i][j] = new Particle(i*width+j,i, j, INIT_HEIGHT, mass);
+				Particle p = new Particle(i*width+j,new Vector3D(i, j, INIT_HEIGHT-i),new Vector3D(0,0,0), mass);
+				matrix[i][j] = p;
+				particles.add(p);
 			}
 		}
 	}
@@ -71,14 +78,11 @@ public class World {
 	}
 	
 	public Vector3D Force(Particle p){
-		Vector3D f = new Vector3D(0,0,-p.getMass()*GRAVITY);
 		return addVector(getInternalForces(p),getExternalForces(p));		
-		
 	}
 	
 	private Vector3D getInternalForces(Particle p){
 		Vector3D f=new Vector3D(0,0,0);
-		double k =0.3;
 		double original = 1;
 		
 		for(Particle neighbour: p.getNeighbours()){
@@ -87,9 +91,7 @@ public class World {
 			f.sum(substractVector(aux,multiplyVector((substractVector(neighbour.getPos(),p.getPos())),original/p.getDistance(neighbour))));
 		}
 		
-		
 		return f;
-		
 	}
 	
 	private Vector3D getExternalForces(Particle p){
@@ -100,7 +102,6 @@ public class World {
 		f.minus(vel);
 
 		return f;
-		
 	}
 	
 	public Particle[][] getMatrix() {
@@ -117,6 +118,10 @@ public class World {
 	
 	private Vector3D multiplyVector(Vector3D v1, double value){
 		return new Vector3D(v1.getX()*value, v1.getY()*value, v1.getZ()*value);
+	}
+	
+	public Set<Particle> getParticles() {
+		return particles;
 	}
 
 }

@@ -4,9 +4,9 @@ public class Main {
 	
 	public static void main(String[] args) {
 		
-		World.getInstance().setWorld(100, 100, 1);
-		
-		Output.getInstace().write(World.getInstance().getMatrix(), 100, 100, 0, 0);
+		World.getInstance().setWorld(20, 20, 1);
+		Simulation s = new Simulation(10,0.02,0.1);
+		s.run();
 		
 	}
 

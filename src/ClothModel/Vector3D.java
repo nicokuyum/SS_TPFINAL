@@ -10,6 +10,14 @@ public class Vector3D {
 		this.z = z;
 	}
 	
+	public Vector3D(Vector3D copy){
+		this(copy.getX(),copy.getY(),copy.getZ());
+	}
+	
+	public Vector3D(){
+		this(0,0,0);
+	}
+	
 	public double getDistance(Vector3D other){
 		return Math.sqrt(Math.pow(this.x, other.x) + Math.pow(this.y, other.y) + Math.pow(this.z, other.z));
 	}
