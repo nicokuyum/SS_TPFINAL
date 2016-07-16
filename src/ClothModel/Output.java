@@ -43,12 +43,23 @@ public class Output {
 			
 			for(Particle p: particles){
 					out.write(p.getID() + "\t" + p.getPos().getX() + "\t" + p.getPos().getY() + "\t" + p.getPos().getZ() + "\t" + 0.2 + "\t"
-							+ 255 + "\t" + 255 + "\t" + 255 + "\n");
+							+ getColor(p));
+					
+					getColor(p);
 			}
 			out.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private String getColor(Particle p){
+		//System.out.println(p.getForce().toString());
+		int x = (int)(Math.abs(p.getForce().getX())*100)%256;
+		int y = (int)(Math.abs(p.getForce().getY())*100)%256;
+		int z = (int)(Math.abs(p.getForce().getZ())*100)%256;
+		return x + "\t" + y + "\t" + z + "\n";
+		//return 255 + "\t" + 255 + "\t" + 255 + "\n"
 	}
 
 }
