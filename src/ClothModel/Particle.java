@@ -10,7 +10,7 @@ public class Particle {
 	private Vector3D vel, force, nextF, prevF;
 
 	private double mass;
-	private Set<Particle> neighbours;
+	private Set<Link> neighbours;
 
 
 	public Particle(int id, Vector3D pos, Vector3D vel, double mass) {
@@ -27,11 +27,11 @@ public class Particle {
 		this(counter,p,v,mass);
 	}
 
-	public void setNeighbour(Particle p) {
-		neighbours.add(p);
+	public void setNeighbour(Link l) {
+		neighbours.add(l);
 	}
 	
-	public Set<Particle> getNeighbours() {
+	public Set<Link> getNeighbours() {
 		return neighbours;
 	}
 	
@@ -93,7 +93,7 @@ public class Particle {
 	}
 	
 	public void addSameNeighbours(Particle p){
-		for(Particle paux: p.getNeighbours())
+		for(Link paux: p.getNeighbours())
 			this.neighbours.add(paux);
 	}
 	

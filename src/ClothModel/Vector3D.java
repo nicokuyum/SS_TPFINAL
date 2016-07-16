@@ -19,7 +19,7 @@ public class Vector3D {
 	}
 	
 	public double getDistance(Vector3D other){
-		return Math.sqrt(Math.pow(this.x, other.x) + Math.pow(this.y, other.y) + Math.pow(this.z, other.z));
+		return Math.sqrt(Math.pow(this.x-other.x, 2) + Math.pow(this.y-other.y, 2) + Math.pow(this.z-other.z, 2));
 	}
 	
 	public void multiply(double value){

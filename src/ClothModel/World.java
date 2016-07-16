@@ -13,7 +13,8 @@ public class World {
 	private Set<Particle> particles;
 	
 	private static final double GRAVITY = 9.8;
-	private static final double C = 0.7;
+	private static final double C = 0.05;
+	private static final double K = 1000;
 	public int h, w;
 
 	private World() {
@@ -38,7 +39,7 @@ public class World {
 	private void generateParticles(Particle[][] matrix, int height, int width, int mass) {
 		for (int i = 0; i < height; i++) {
 			for (int j = 0; j < width; j++) {
-				Particle p = new Particle(i*width+j,new Vector3D(i, j, INIT_HEIGHT-i),new Vector3D(0,0,0), mass);
+				Particle p = new Particle(i*width+j,new Vector3D(i, j, /*INIT_HEIGHT-i/4.0*/15),new Vector3D(0,0,0), mass);
 				matrix[i][j] = p;
 				particles.add(p);
 			}
@@ -55,6 +56,7 @@ public class World {
 	
 	private void setNeighbours(int i, int j){
 		int neighX, neighY;
+		Particle p = matrix[i][j];
 		for(int x=0; x<=1; x++){
 			neighX = i+x;
 			if(neighX>=0 && neighX<h){
@@ -63,8 +65,10 @@ public class World {
 					// Add particles: right, bottom and bottom right
 					if(neighY>=0 && neighY<w && (x!=0 || y!=0)){
 						if(!(!diagonal && x==1 && y==1)){
-							matrix[i][j].setNeighbour(matrix[neighX][neighY]);
-							matrix[neighX][neighY].setNeighbour(matrix[i][j]);
+							Particle other = matrix[neighX][neighY];
+							double dist = p.getDistance(other);
+							p.setNeighbour(new Link(other,dist));
+							other.setNeighbour(new Link(p,dist));
 						}
 					}
 				}
@@ -72,8 +76,10 @@ public class World {
 		}
 		// Add particle: top right
 		if(diagonal && i-1>=0 && j+1<w){
-			matrix[i][j].setNeighbour(matrix[i-1][j+1]);
-			matrix[i-1][j+1].setNeighbour(matrix[i][j]);
+			Particle other = matrix[i-1][j+1];
+			double dist = p.getDistance(other);
+			p.setNeighbour(new Link(other,dist));
+			other.setNeighbour(new Link(p,dist));
 		}
 	}
 	
@@ -83,12 +89,12 @@ public class World {
 	
 	private Vector3D getInternalForces(Particle p){
 		Vector3D f=new Vector3D(0,0,0);
-		double original = 1;
 		
-		for(Particle neighbour: p.getNeighbours()){
-			Vector3D aux= substractVector(neighbour.getPos(),p.getPos());
-			
-			f.sum(substractVector(aux,multiplyVector((substractVector(neighbour.getPos(),p.getPos())),original/p.getDistance(neighbour))));
+		for(Link link: p.getNeighbours()){
+			Vector3D aux= substractVector(link.getNeighbour().getPos(),p.getPos());
+			Vector3D term = substractVector(aux,multiplyVector((substractVector(link.getNeighbour().getPos(),p.getPos())),link.getOriginalDist()/p.getDistance(link.getNeighbour())));
+			term.multiply(K);
+			f.sum(term);
 		}
 		
 		return f;
@@ -98,7 +104,7 @@ public class World {
 
 		Vector3D vel = p.getVel();
 		vel.multiply(C);
-		Vector3D f = new Vector3D(0,0,GRAVITY*p.getMass());
+		Vector3D f = new Vector3D(0,0,-GRAVITY*p.getMass());
 		f.minus(vel);
 
 		return f;

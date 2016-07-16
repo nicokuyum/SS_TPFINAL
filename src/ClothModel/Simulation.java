@@ -64,8 +64,10 @@ public class Simulation {
 				Output.getInstace().write(particles,time,0);
 				printTime += dt2;
 			}
-			for(Particle p: particles)
-				beeman(p);
+			for(Particle p: particles){
+				if(p.getID()>=20)
+					beeman(p);
+			}
 			time += dt;
 		}
 	}
