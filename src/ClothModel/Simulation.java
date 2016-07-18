@@ -80,28 +80,40 @@ public class Simulation {
 					System.out.println(percentage + "%");
 					lastPercent = percentage;
 				}
-				//Output.getInstace().write(particles,time,0);
+				Output.getInstace().write(particles,time,0);
 				Output.getInstace().writeEnergies(particles, printTime, 0);
 				printTime += dt2;
 			}
-			/*double xFluid = World.getuFluid().getX()+0.025*(Math.random()<0.5?1:-1);
-			if(xFluid>0.5)
-				xFluid=0.5;
-			if(xFluid<-0.5)
-				xFluid=-0.5;
-			double yFluid = World.getuFluid().getY()+0.1*(Math.random()<0.5?1:-1);
-			if(yFluid>8)
-				yFluid = 20;
-			if(yFluid<5)
-				yFluid = 5;
-			World.setuFluid(new Vector3D(xFluid,yFluid,0));*/
+			
+			/*if(runs%10000==0){
+				double xFluid = World.getuFluid().getX()+10*(Math.random()<0.5?1:-1);
+				if(xFluid>200)
+					xFluid=200;
+				if(xFluid<-200)
+					xFluid=-200;
+				double yFluid = World.getuFluid().getY()+25*(Math.random()<0.5?1:-1);
+				if(yFluid>500)
+					yFluid = 500;
+				if(yFluid<-500)
+					yFluid = -500;
+				double zFluid = World.getuFluid().getZ()+10*(Math.random()<0.5?1:-1);
+				if(zFluid>100)
+					zFluid=100;
+				if(zFluid<-100)
+					zFluid=-100;
+				World.setuFluid(new Vector3D(xFluid,yFluid,zFluid));
+			}*/
 			for(Particle p: particles){
-				if(p.getID()>=15){
+				if(p.getID()>=10){
 					beeman(p);
 				}
 			}
 			time += dt;
+			runs++;
 		}
+		/*for(Particle p: particles){
+			System.out.println(Output.getInstace().UEsingle(p));
+		}*/
 	}
 	
 	private Vector3D eulerPos(Particle part, double dt){

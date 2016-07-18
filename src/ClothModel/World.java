@@ -13,14 +13,14 @@ public class World {
 	private Particle[][] matrix = null;
 	private Set<Particle> particles;
 	
-	private static final double R = 0.25;
+	private static final double R = 0.5;
 	
 	public static final double GRAVITY = 9.8;
-	public static final double Cdamp = 0.05;
+	public static final double Cdamp = 0.99;
 	public static final double Cvis = 1;
-	public static final double K = 3000;
-	private static Vector3D uFluid = new Vector3D();
-	private static final Vector3D nSurf = new Vector3D(1,1,0);
+	public static final double K = 10000;
+	private static Vector3D uFluid = new Vector3D(0,0,0);
+	private static final Vector3D nSurf = new Vector3D(0.2,0.8,0);
 	
 	public int h, w;
 
@@ -109,10 +109,8 @@ public class World {
 	
 	private Vector3D getExternalForces(Particle p){
 
-		Vector3D vel = p.getVel();
-		vel.multiply(Cdamp);
 		Vector3D f = new Vector3D(0,0,-GRAVITY*p.getMass());
-		f.minus(vel);
+		f.minus(multiplyVector(p.getVel(), Cdamp));
 		//f.sum(getViscF(p));
 		return f;
 	}

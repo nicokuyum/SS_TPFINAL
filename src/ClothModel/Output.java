@@ -42,7 +42,7 @@ public class Output {
 			out.write("25007\t30\t30\t30\t0.1\t0\n");*/
 			
 			for(Particle p: particles){
-					out.write(p.getID() + "\t" + p.getPos().getX() + "\t" + p.getPos().getY() + "\t" + p.getPos().getZ() + "\t" + p.getRadius() + "\t" + p.getForce().magnitude() + "\n");
+					out.write(p.getID() + "\t" + p.getPos().getX() + "\t" + p.getPos().getY() + "\t" + p.getPos().getZ() + "\t" + p.getRadius() + "\t" + UEsingle(p) + "\n");
 			}
 			out.close();
 		} catch (IOException e) {
@@ -61,7 +61,7 @@ public class Output {
 			}
 		}
 		try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(fileName, true)))) {
-			out.write(time + "\t" + totEnergy(particles) + "\n");
+			out.write(time + "\t" + UGEnergy(particles)+ "\t" + UEEnergy(particles)+ "\t" + KEnergy(particles) + "\n");
 			out.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -85,10 +85,16 @@ public class Output {
 	private double UEEnergy(Set<Particle> particles){
 		double total = 0;
 		for(Particle p: particles){
-			for(Link link: p.getNeighbours())
-				total += Math.pow(link.getOriginalDist()-p.getDistance(link.getNeighbour()),2)*World.K/2;
+			total += UEsingle(p);
 		}
 		return total/2; // (The sum is done twice per spring)
+	}
+	
+	public double UEsingle(Particle p){
+		double total = 0;
+		for(Link link: p.getNeighbours())
+			total += Math.pow(link.getOriginalDist()-p.getDistance(link.getNeighbour()),2)*World.K/2;
+		return total;
 	}
 	
 	private double totEnergy(Set<Particle> particles){
