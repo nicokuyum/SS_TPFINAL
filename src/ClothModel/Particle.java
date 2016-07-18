@@ -6,25 +6,28 @@ public class Particle {
 	
 	private static int counter = 0;
 	private final int ID;
-	private Vector3D pos, nextPos;
+	private Vector3D pos, nextPos, prevPos;
 	private Vector3D vel, force, nextF, prevF;
 
+	private double radius;
 	private double mass;
 	private Set<Link> neighbours;
 
 
-	public Particle(int id, Vector3D pos, Vector3D vel, double mass) {
+	public Particle(int id, Vector3D pos, Vector3D vel, double mass, double radius) {
 		this.ID = id;
 		this.pos = pos;
 		this.vel = vel;
 		this.mass = mass;
+		this.radius = radius;
 		this.nextPos = new Vector3D();
+		this.prevPos = new Vector3D();
 		neighbours = new HashSet<>();
 		counter++;
 	}
 	
-	public Particle(Vector3D p,Vector3D v, double mass){
-		this(counter,p,v,mass);
+	public Particle(Vector3D p,Vector3D v, double mass, double radius){
+		this(counter,p,v,mass,radius);
 	}
 
 	public void setNeighbour(Link l) {
@@ -57,6 +60,14 @@ public class Particle {
 
 	public double getMass() {
 		return mass;
+	}
+	
+	public Vector3D getPrevPos() {
+		return prevPos;
+	}
+	
+	public void setPrevPos(Vector3D prevPos) {
+		this.prevPos = prevPos;
 	}
 	
 	public Vector3D getForce() {
@@ -95,6 +106,10 @@ public class Particle {
 	public void addSameNeighbours(Particle p){
 		for(Link paux: p.getNeighbours())
 			this.neighbours.add(paux);
+	}
+	
+	public double getRadius() {
+		return radius;
 	}
 	
 	public int hashCode(){

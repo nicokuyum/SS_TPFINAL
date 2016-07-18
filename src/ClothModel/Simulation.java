@@ -25,7 +25,7 @@ public class Simulation {
 		p.getNextPos().setZ(p.getPos().getZ() + p.getVel().getZ()*dt + (2.0/3.0)*p.getForce().getZ()*dt*dt/p.getMass() - (1.0/6.0)*p.getPrevF().getZ()*dt*dt/p.getMass());
 		
 		//predict next vel
-		Particle predicted = new Particle(new Vector3D(p.getPos()),new Vector3D(0,0,0),p.getMass());
+		Particle predicted = new Particle(new Vector3D(p.getPos()),new Vector3D(0,0,0),p.getMass(),p.getRadius());
 		predicted.getVel().setX(p.getVel().getX() + (3.0/2.0)*dt*p.getForce().getX()/p.getMass() - 0.5*dt*p.getPrevF().getX()/p.getMass());
 		predicted.getVel().setY(p.getVel().getY() + (3.0/2.0)*dt*p.getForce().getY()/p.getMass() - 0.5*dt*p.getPrevF().getY()/p.getMass());
 		predicted.getVel().setZ(p.getVel().getZ() + (3.0/2.0)*dt*p.getForce().getZ()/p.getMass() - 0.5*dt*p.getPrevF().getZ()/p.getMass());
@@ -46,27 +46,59 @@ public class Simulation {
 		p.setForce(World.getInstance().Force(p));
 	}
 	
+	public void verlet(Particle p){
+		p.getNextPos().setX(2*p.getPos().getX()-p.getPrevPos().getX()+dt*dt*p.getForce().getX()/p.getMass());
+		p.getNextPos().setY(2*p.getPos().getY()-p.getPrevPos().getY()+dt*dt*p.getForce().getY()/p.getMass());
+		p.getNextPos().setZ(2*p.getPos().getZ()-p.getPrevPos().getZ()+dt*dt*p.getForce().getZ()/p.getMass());
+		
+		p.getVel().setX((p.getNextPos().getX()-p.getPrevPos().getX())/(2*dt));
+		p.getVel().setY((p.getNextPos().getY()-p.getPrevPos().getY())/(2*dt));
+		p.getVel().setZ((p.getNextPos().getZ()-p.getPrevPos().getZ())/(2*dt));
+		
+		p.setPrevPos(p.getPos());
+		p.setPos(p.getNextPos());
+		
+		p.setForce(World.getInstance().Force(p));
+	}
+	
 	public void run(){
-		int runs = 0;
+		int runs = 0, percentage = 0, lastPercent = 0;
 		double time = 0, printTime = 0;
 		for(Particle p: particles){
 			p.setForce(World.getInstance().Force(p));
 			Vector3D prevpos = eulerPos(p,dt);
 			Vector3D prevvel = eulerVel(p,dt);
-			Particle auxPrev = new Particle(prevpos,prevvel,p.getMass());
+			Particle auxPrev = new Particle(prevpos,prevvel,p.getMass(),p.getRadius());
 			auxPrev.addSameNeighbours(p);
 			p.setPrevF(World.getInstance().Force(auxPrev));
 		}
+		System.out.println("0%");
 		while(time <= totalTime){
-			if(runs%100==0)
-				System.out.println((100*time/totalTime) + "%");
 			if(printTime<=time){
-				Output.getInstace().write(particles,time,0);
+				percentage = (int)(100*time/totalTime);
+				if(percentage != lastPercent){
+					System.out.println(percentage + "%");
+					lastPercent = percentage;
+				}
+				//Output.getInstace().write(particles,time,0);
+				Output.getInstace().writeEnergies(particles, printTime, 0);
 				printTime += dt2;
 			}
+			/*double xFluid = World.getuFluid().getX()+0.025*(Math.random()<0.5?1:-1);
+			if(xFluid>0.5)
+				xFluid=0.5;
+			if(xFluid<-0.5)
+				xFluid=-0.5;
+			double yFluid = World.getuFluid().getY()+0.1*(Math.random()<0.5?1:-1);
+			if(yFluid>8)
+				yFluid = 20;
+			if(yFluid<5)
+				yFluid = 5;
+			World.setuFluid(new Vector3D(xFluid,yFluid,0));*/
 			for(Particle p: particles){
-				if(p.getID()>=20)
+				if(p.getID()>=15){
 					beeman(p);
+				}
 			}
 			time += dt;
 		}

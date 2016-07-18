@@ -5,6 +5,7 @@ import java.util.Set;
 
 public class World {
 	
+	
 	public final double INIT_HEIGHT = 20;
 	public boolean diagonal = true;
 
@@ -12,9 +13,15 @@ public class World {
 	private Particle[][] matrix = null;
 	private Set<Particle> particles;
 	
-	private static final double GRAVITY = 9.8;
-	private static final double C = 0.05;
-	private static final double K = 1000;
+	private static final double R = 0.25;
+	
+	public static final double GRAVITY = 9.8;
+	public static final double Cdamp = 0.05;
+	public static final double Cvis = 1;
+	public static final double K = 3000;
+	private static Vector3D uFluid = new Vector3D();
+	private static final Vector3D nSurf = new Vector3D(1,1,0);
+	
 	public int h, w;
 
 	private World() {
@@ -27,7 +34,7 @@ public class World {
 		return instance;
 	}
 
-	public void setWorld(int h, int w, int mass) {
+	public void setWorld(int h, int w, double mass) {
 		particles.clear();
 		matrix = new Particle[h][w];
 		this.h = h;
@@ -36,10 +43,10 @@ public class World {
 		calculateNeighbours(matrix);
 	}
 
-	private void generateParticles(Particle[][] matrix, int height, int width, int mass) {
+	private void generateParticles(Particle[][] matrix, int height, int width, double mass) {
 		for (int i = 0; i < height; i++) {
 			for (int j = 0; j < width; j++) {
-				Particle p = new Particle(i*width+j,new Vector3D(i, j, /*INIT_HEIGHT-i/4.0*/15),new Vector3D(0,0,0), mass);
+				Particle p = new Particle(i*width+j,new Vector3D(i, j, INIT_HEIGHT),new Vector3D(0,0,0), mass, R);
 				matrix[i][j] = p;
 				particles.add(p);
 			}
@@ -103,10 +110,16 @@ public class World {
 	private Vector3D getExternalForces(Particle p){
 
 		Vector3D vel = p.getVel();
-		vel.multiply(C);
+		vel.multiply(Cdamp);
 		Vector3D f = new Vector3D(0,0,-GRAVITY*p.getMass());
 		f.minus(vel);
-
+		//f.sum(getViscF(p));
+		return f;
+	}
+	
+	private Vector3D getViscF(Particle p){
+		Vector3D f = new Vector3D(multiplyVector(nSurf,(scalarProduct(nSurf, substractVector(uFluid, p.getVel())))));
+		f.multiply(Cvis);
 		return f;
 	}
 	
@@ -129,5 +142,16 @@ public class World {
 	public Set<Particle> getParticles() {
 		return particles;
 	}
-
+	
+	private double scalarProduct(Vector3D v1, Vector3D v2){
+		return v1.getX()*v2.getX() + v1.getY()*v2.getY() + v1.getZ()*v2.getZ();
+	}
+	
+	public static void setuFluid(Vector3D uFluid) {
+		World.uFluid = uFluid;
+	}
+	
+	public static Vector3D getuFluid() {
+		return uFluid;
+	}
 }

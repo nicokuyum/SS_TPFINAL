@@ -70,6 +70,10 @@ public class Vector3D {
 		this.z-=v2.getZ();
 	}
 	
+	public double magnitude(){
+		return Math.sqrt(x*x+y*y+z*z);
+	}
+	
 	public String toString(){
 		return "[" + x + " - " + y + " - " + z + "]";
 	}
