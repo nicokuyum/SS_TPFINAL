@@ -1,7 +1,7 @@
 # SS_TPFINAL
 Cloth fabric simulation
 
-**Animations:**
+**Animations:** (Done using [Ovito](https://ovito.org/))
 
 [1] https://www.youtube.com/watch?v=PWOHQDP7A9M (Bandera lado fijo - 8 vecinos)
 
